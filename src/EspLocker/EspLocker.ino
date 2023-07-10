@@ -10,11 +10,10 @@
 #define NOTIFICATION_CONNECTION_WIFI WIFI_EVENT_SOFTAPMODE_DISTRIBUTE_STA_IP
 #define LED_BLUE  2
 #endif
+#define RELAY_DOOR 4
 
 String ssid = "Antoine & Associés";
 String password = "9876543210";
-int pinDoor=4;
-int nbClient;
 IPAddress local_IP(192,168,0,0);
 IPAddress subnet(255,255,255,0);
 bool openTheDoor=false;
@@ -22,40 +21,25 @@ bool openTheDoor=false;
 void openDoor(){
     digitalWrite(LED_BLUE, LOW);
     Serial.println("open");
-    digitalWrite(pinDoor,HIGH);
+    digitalWrite(RELAY_DOOR,HIGH);
     delay(10000);
-    digitalWrite(pinDoor,LOW);
+    digitalWrite(RELAY_DOOR,LOW);
     digitalWrite(LED_BLUE, HIGH);
     openTheDoor = false;
-}
-
-int countConnectedClient(){
-  // This is different to WiFi.softAPgetStationNum(); as it may count client that have not yet validate credentials.
-
-  int count = 0;
-  station_info * stat_info = wifi_softap_get_station_info();
-
-  while (stat_info != NULL)
-  {
-    count++;
-    stat_info = STAILQ_NEXT(stat_info, next);
-  }
-  return count;
 }
 
 
 
 void setup() {
-  nbClient = 0;
   Serial.begin(9600);
-  pinMode(pinDoor,OUTPUT);
+  pinMode(RELAY_DOOR,OUTPUT);
   pinMode(LED_BLUE,OUTPUT);
   digitalWrite(LED_BLUE,LOW); // low allume la  led !!!
-  digitalWrite(pinDoor,LOW);
+  digitalWrite(RELAY_DOOR,LOW);
   Serial.print("Start WiFi ... ");
   WiFi.softAPConfig(local_IP, local_IP, subnet) ;
   WiFi.onEvent([](WiFiEvent_t a) {openTheDoor=true;},NOTIFICATION_CONNECTION_WIFI);
-  WiFi.softAP(ssid,password) ;
+  WiFi.softAP(ssid.c_str(),password.c_str()) ;
   delay(500); // pour voir la led allumee au demarrage
   digitalWrite(LED_BLUE,HIGH); // high eteint la  led !!!
 }
