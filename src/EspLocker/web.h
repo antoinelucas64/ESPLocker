@@ -5,6 +5,8 @@
 #ifdef ESP32
 #include <WebServer.h>
 #else
+#include <ESP8266mDNS.h>
+#include <ArduinoOTA.h>
 #include <ESP8266WebServer.h>
 #endif
 
@@ -15,15 +17,17 @@ public:
 
   void init();
   void handleClient();
+  bool haveToReboot();
 private:
   Config& config;
-#ifdef ESP32
-WebServer server;
-#else
-ESP8266WebServer server;
-#endif  
-
+  bool wantReboot;
+  String incorrectPassword();
   String createAdminPage();
   String formWifiPage() ;
+  String formAdminPage() ;
+  String info();
+  String responseHTML();
+  String headHtml();
+  void handleLogin();
 };
 #endif
