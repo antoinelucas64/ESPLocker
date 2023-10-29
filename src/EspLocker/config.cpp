@@ -7,6 +7,11 @@ void Config::init(){
   readConfig();
 }
 
+
+String Config::info(){
+  return "type=\tESP8266-1\nSSID=\t"+getSSID() + "\nPassword=\t" + getPassword() + "\nWeb user=\t" + getWWWUser() + "\nWeb password=\t" + getWWWPassword() + "Version=\t 1\nDate=\t" + __DATE__ + "\n";
+}
+
 void Config::factoryReset(){
   config.begin("config", false);
   config.putString("ssid", "Appartement Associes");

@@ -28,6 +28,7 @@ public:
 
   void factoryReset();
 
+  String info();
   void writeConfig(const String & password);
   void writeConfig(const String & ssid, const String & password);
   void writeWWWConfig(const String & user,const String & password);

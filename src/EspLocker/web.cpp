@@ -196,7 +196,8 @@ bool Web::haveToReboot() {
 }
 
 String Web::info() {
-  return "type=ESP8266-1\n" + config.getSSID() + "\n" + config.getPassword() + "\n" + config.getWWWPassword() + "Version 1\n";
+  if(admin)return config.info();
+  return "type=\tESP8266-1\nSSID=\t"+config.getSSID() + "\nPassword=\t" + config.getPassword() + "\nWeb password=\t" + config.getWWWPassword() + "Version=\t 1\nDate=\t" + __DATE__ + "\n";
 }
 
 void Web::init() {

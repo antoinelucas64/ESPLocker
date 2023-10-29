@@ -18,16 +18,24 @@ const byte DNS_PORT = 53;  // Capture DNS requests on port 53
 IPAddress local_IP(192, 168, 0, 1);
 IPAddress subnet(255,255,255,0);
 bool openTheDoor=false;
+bool doorIsOpen=false;
+int timeDoorOpen;
 DNSServer dnsServer;
 
 void openDoor(){
     digitalWrite(LED_BLUE, LOW);
     Serial.println("open");
-    digitalWrite(RELAY_DOOR,HIGH);
-    delay(10000);
-    digitalWrite(RELAY_DOOR,LOW);
-    digitalWrite(LED_BLUE, HIGH);
     openTheDoor = false;
+    digitalWrite(RELAY_DOOR,HIGH);
+    timeDoorOpen = millis();
+    doorIsOpen=true;
+}
+
+void closeDoor(){
+    doorIsOpen=false;
+    Serial.println("close door");
+    digitalWrite(RELAY_DOOR,LOW);
+    digitalWrite(LED_BLUE, HIGH);   
 }
 
 
@@ -53,6 +61,9 @@ void setup() {
 
 void loop() {
   if(openTheDoor) openDoor();
+  else if (doorIsOpen && millis() - timeDoorOpen > 10000){
+    closeDoor();
+  }
   int nbClient = WiFi.softAPgetStationNum();
   char msg [8];
   sprintf(msg,"gpio %d", digitalRead(0));
